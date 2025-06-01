@@ -1,0 +1,25 @@
+2929. Distribute Candies Among Children II
+solution:
+class Solution:
+    def distributeCandies(self, candies: int, maxPerChild: int) -> int:
+        # Count the number of integer solutions to a + b + c = total (with no bounds)
+        def countCombinations(total: int) -> int:
+            if total < 0:
+                return 0
+            return (total + 2) * (total + 1) // 2  # C(total + 2, 2)
+
+        upperLimit = maxPerChild + 1  # m = limit + 1 for inclusion-exclusion
+
+        totalWays = countCombinations(candies)
+        subtractOneOverLimit = 3 * countCombinations(candies - upperLimit)
+        addTwoOverLimit = 3 * countCombinations(candies - 2 * upperLimit)
+        subtractAllOverLimit = countCombinations(candies - 3 * upperLimit)
+
+        validWays = (
+            totalWays
+            - subtractOneOverLimit
+            + addTwoOverLimit
+            - subtractAllOverLimit
+        )
+
+        return validWays
