@@ -1,0 +1,18 @@
+135. Candy
+solutions:
+from typing import List
+
+class Solution:
+    def candy(self, scores: List[int]) -> int:
+        n = len(scores)
+        dist = [1] * n
+
+        for i in range(1, n):
+            if scores[i] > scores[i - 1]:
+                dist[i] = dist[i - 1] + 1
+
+        for i in range(n - 2, -1, -1):
+            if scores[i] > scores[i + 1]:
+                dist[i] = max(dist[i], dist[i + 1] + 1)
+
+        return sum(dist)
