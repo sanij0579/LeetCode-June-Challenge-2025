@@ -1,0 +1,33 @@
+
+
+1298. Maximum Candies You Can Get from Boxes
+Solution:
+from typing import List
+
+class Solution:
+    def maxCandies(self, boxStatus: List[int], candyCount: List[int], boxKeys: List[List[int]], nestedBoxes: List[List[int]], startingBoxes: List[int]) -> int:
+        def collectCandies(boxIndex):
+            total = candyCount[boxIndex]
+            boxStatus[boxIndex] = 0  # Mark box as processed (closed and not having anything new)
+
+            # Process keys found in the box
+            for key in boxKeys[boxIndex]:
+                boxStatus[key] |= 1  # Set 'open' bit
+                if boxStatus[key] == 3:  # If both open and have the box
+                    total += collectCandies(key)
+
+            # Process boxes contained inside
+            for contained in nestedBoxes[boxIndex]:
+                boxStatus[contained] |= 2  # Set 'have' bit
+                if boxStatus[contained] == 3:
+                    total += collectCandies(contained)
+
+            return total
+
+        totalCandies = 0
+        for box in startingBoxes:
+            boxStatus[box] |= 2  # Set 'have' bit
+            if boxStatus[box] == 3:
+                totalCandies += collectCandies(box)
+
+        return totalCandies
