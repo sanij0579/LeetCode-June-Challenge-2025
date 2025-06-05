@@ -1,0 +1,33 @@
+1061. Lexicographically Smallest Equivalent String
+solution:
+class UnionFind:
+    def __init__(self, size):
+        self.parent = list(range(size))
+
+    def find(self, node):
+        if self.parent[node] != node:
+            self.parent[node] = self.find(self.parent[node])  # Path compression
+        return self.parent[node]
+
+    def union(self, node1, node2):
+        root1 = self.find(node1)
+        root2 = self.find(node2)
+        if root1 == root2:
+            return
+        if root2 > root1:
+            self.parent[root2] = root1
+        else:
+            self.parent[root1] = root2
+
+class Solution:
+    def smallestEquivalentString(self, str1: str, str2: str, baseStr: str) -> str:
+        uf = UnionFind(26)  # There are 26 lowercase English letters
+        for i in range(len(str1)):
+            uf.union(ord(str1[i]) - ord('a'), ord(str2[i]) - ord('a'))
+
+        result = ""
+        for ch in baseStr:
+            root_char = chr(uf.find(ord(ch) - ord('a')) + ord('a'))
+            result += root_char
+
+        return result
