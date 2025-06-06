@@ -1,0 +1,30 @@
+
+2434. Using a Robot to Print the Lexicographically Smallest String
+solution:
+class Solution:
+    def robotWithString(self, s: str) -> str:
+        from collections import Counter
+
+        # Count frequency of each character in s
+        count = Counter(s)
+        t = []  # Stack to simulate robot memory
+        result = []  # Output written string
+        min_char = 'a'  # Start from smallest possible
+
+        for ch in s:
+            t.append(ch)
+            count[ch] -= 1
+
+            # Update min_char to the next smallest remaining character
+            while min_char <= 'z' and count[min_char] == 0:
+                min_char = chr(ord(min_char) + 1)
+
+            # While the top of stack is <= smallest remaining char in s
+            while t and t[-1] <= min_char:
+                result.append(t.pop())
+
+        # Flush remaining stack
+        while t:
+            result.append(t.pop())
+
+        return ''.join(result)
