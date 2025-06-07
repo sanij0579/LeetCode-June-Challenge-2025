@@ -1,0 +1,28 @@
+3170. Lexicographically Minimum String After Removing Stars
+solution:
+
+class Solution:
+    def clearStars(self, s: str) -> str:
+        length = len(s)
+        to_remove = [False] * length
+        char_positions = [[] for _ in range(26)]  # Stores indices of each character from 'a' to 'z'
+
+        for index in range(length):
+            if s[index] == '*':
+                # Remove the most recent smallest lexicographical character
+                for ch in range(26):
+                    if char_positions[ch]:
+                        last_position = char_positions[ch].pop()
+                        to_remove[last_position] = True
+                        break
+            else:
+                # Track index of the current character
+                char_index = ord(s[index]) - ord('a')
+                char_positions[char_index].append(index)
+
+        result = []
+        for index in range(length):
+            if s[index] != '*' and not to_remove[index]:
+                result.append(s[index])
+
+        return ''.join(result)
