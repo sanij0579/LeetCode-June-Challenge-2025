@@ -1,0 +1,24 @@
+440. K-th Smallest in Lexicographical Order
+solution:
+class Solution(object):
+    def findKthNumber(self, n, k):
+        return self._findKth(0, n, k)
+
+    def _findKth(self, prefix, limit, k):
+        if k == 0:
+            return prefix // 10
+
+        for digit in range(max(prefix, 1), prefix + 10):
+            count = self._countChildren(digit, digit + 1, limit)
+            if count >= k:
+                return self._findKth(digit * 10, limit, k - 1)
+            k -= count
+
+        return -1  # Should never happen
+
+    def _countChildren(self, start, end, limit):
+        if end > limit:
+            if start > limit:
+                return 0
+            return limit - start + 1
+        return (end - start) + self._countChildren(start * 10, end * 10, limit)
