@@ -1,0 +1,41 @@
+3445. Maximum Difference Between Even and Odd Frequency II
+solution:
+class Solution:
+    def maxDifference(self, s: str, k: int) -> int:
+        n = len(s)
+        max_diff = float('-inf')
+        
+        for char_a in '01234':
+            for char_b in '01234':
+                if char_a == char_b:
+                    continue
+
+                diff_array = [1 if c == char_a else (-1 if c == char_b else 0) for c in s]
+                count_a_array = [1 if c == char_a else 0 for c in s]
+                count_b_array = [1 if c == char_b else 0 for c in s]
+
+                prefix_diff = [0] * (n + 1)
+                prefix_a = [0] * (n + 1)
+                prefix_b = [0] * (n + 1)
+
+                for i in range(n):
+                    prefix_diff[i + 1] = prefix_diff[i] + diff_array[i]
+                    prefix_a[i + 1] = prefix_a[i] + count_a_array[i]
+                    prefix_b[i + 1] = prefix_b[i] + count_b_array[i]
+
+                min_prefix = [[float('inf'), float('inf')], [float('inf'), float('inf')]]
+                left = 0
+
+                for right in range(n + 1):
+                    while right - left >= k and prefix_a[right] - prefix_a[left] > 0 and prefix_b[right] - prefix_b[left] > 0:
+                        parity_a = prefix_a[left] % 2
+                        parity_b = prefix_b[left] % 2
+                        min_prefix[parity_a][parity_b] = min(min_prefix[parity_a][parity_b], prefix_diff[left])
+                        left += 1
+
+                    curr_parity_a = prefix_a[right] % 2
+                    curr_parity_b = prefix_b[right] % 2
+                    max_diff = max(max_diff, prefix_diff[right] - min_prefix[1 - curr_parity_a][curr_parity_b])
+
+        return max_diff
+        
