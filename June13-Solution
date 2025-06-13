@@ -1,0 +1,27 @@
+2616. Minimize the Maximum Difference of Pairs
+Solution:
+class Solution:
+    def minimizeMax(self, nums: List[int], required_pairs: int) -> int:
+        nums.sort()
+        total_elements = len(nums)
+
+        def can_form_pairs(max_allowed_diff):
+            pair_count = 0
+            index = 0
+            while index < total_elements - 1 and pair_count < required_pairs:
+                if nums[index + 1] - nums[index] <= max_allowed_diff:
+                    pair_count += 1
+                    index += 2  # Skip the next element as it's already paired
+                else:
+                    index += 1
+            return pair_count >= required_pairs
+
+        low, high = 0, nums[-1] - nums[0]
+        while low < high:
+            mid_diff = (low + high) // 2
+            if can_form_pairs(mid_diff):
+                high = mid_diff
+            else:
+                low = mid_diff + 1
+
+        return low
