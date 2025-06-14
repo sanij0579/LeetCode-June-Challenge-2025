@@ -1,0 +1,23 @@
+2566. Maximum Difference by Remapping a Digit
+Solution:
+class Solution:
+    def minMaxDifference(self, num: int) -> int:
+        num_str = str(num)
+        
+        # Find max by replacing first non-9 digit with 9
+        for ch in num_str:
+            if ch != '9':
+                max_num = int(num_str.replace(ch, '9'))
+                break
+        else:
+            max_num = num  # all digits are 9
+        
+        # Find min by replacing first non-0 digit (not at start) with 0
+        for ch in num_str:
+            if ch != '0':
+                min_num = int(num_str.replace(ch, '0'))
+                break
+        else:
+            min_num = num  # all digits are 0
+        
+        return max_num - min_num
