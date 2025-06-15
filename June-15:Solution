@@ -1,0 +1,29 @@
+1432. Max Difference You Can Get From Changing an Integer
+Solution:
+class Solution:
+    def maxDiff(self, num: int) -> int:
+        s = str(num)
+        
+        # For maximum number: replace the first digit that is not '9' with '9'
+        for ch in s:
+            if ch != '9':
+                max_num = int(s.replace(ch, '9'))
+                break
+        else:
+            max_num = num  # all digits are already 9
+
+        # For minimum number: two cases
+        if s[0] != '1':
+            # If first digit is not '1', replace it with '1' to avoid leading zero
+            min_num = int(s.replace(s[0], '1'))
+        else:
+            # Else, find first digit other than 0 or 1 and replace with 0
+            for ch in s[1:]:
+                if ch != '0' and ch != '1':
+                    min_num = int(s.replace(ch, '0'))
+                    break
+            else:
+                min_num = num  # all digits are 1s or 0s
+
+        return max_num - min_num
+        
