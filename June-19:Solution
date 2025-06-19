@@ -1,0 +1,20 @@
+2294. Partition Array Such That Maximum Difference Is K
+Solution
+from typing import List
+
+class Solution:
+    def partitionArray(self, nums: List[int], k: int) -> int:
+        # Step 1: Sort the array
+        nums.sort()
+        
+        # Step 2: Initialize counters
+        count = 1  # At least one group is needed
+        start = nums[0]  # First element of the current group
+
+        # Step 3: Iterate through the array
+        for num in nums:
+            if num - start > k:
+                count += 1       # Start a new group
+                start = num      # Reset the start for the new group
+        
+        return count
