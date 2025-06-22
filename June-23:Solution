@@ -1,0 +1,18 @@
+
+2138. Divide a String Into Groups of Size k
+solution:
+from typing import List
+
+class Solution:
+    def divideString(self, s: str, k: int, fill: str) -> List[str]:
+        # Step 1: Pad the string with fill character if needed
+        remainder = len(s) % k
+        if remainder != 0:
+            s += fill * (k - remainder)
+        
+        # Step 2: Divide the string into k-sized chunks
+        result = []
+        for i in range(0, len(s), k):
+            result.append(s[i:i+k])
+        
+        return result
