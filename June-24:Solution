@@ -1,0 +1,42 @@
+2081. Sum of k-Mirror Numbers
+Solution:
+class Solution:
+    def is_k_base_palindrome(self, number: int, base: int) -> bool:
+        digits = []
+        while number > 0:
+            digits.append(number % base)
+            number //= base
+        return digits == digits[::-1]
+
+    def build_decimal_palindrome(self, half_part: int, is_odd_length: bool) -> int:
+        if is_odd_length:
+            # For odd length, skip the middle digit in reverse
+            return half_part * (10 ** (len(str(half_part)) - 1)) + self.reverse_number(half_part // 10)
+        else:
+            # For even length, use full reverse
+            return half_part * (10 ** len(str(half_part))) + self.reverse_number(half_part)
+
+    def reverse_number(self, num: int) -> int:
+        result = 0
+        while num > 0:
+            result = result * 10 + num % 10
+            num //= 10
+        return result
+
+    def kMirror(self, base: int, count_required: int) -> int:
+        total_sum = 0
+        palindrome_length = 1
+
+        while True:
+            half_length = (palindrome_length + 1) // 2
+            half_start = 10 ** (half_length - 1)
+
+            for half in range(half_start, 10 ** half_length):
+                full_palindrome = self.build_decimal_palindrome(half, palindrome_length % 2 == 1)
+                if self.is_k_base_palindrome(full_palindrome, base):
+                    total_sum += full_palindrome
+                    count_required -= 1
+                    if count_required == 0:
+                        return total_sum
+
+            palindrome_length += 1
