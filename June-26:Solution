@@ -1,0 +1,21 @@
+2311. Longest Binary Subsequence Less Than or Equal to K
+Solution:
+class Solution:
+    def longestSubsequence(self, binary_string: str, max_value: int) -> int:
+        length = len(binary_string)
+        zero_count = binary_string.count('0')
+        one_count = 0
+        current_value = 0
+        current_power = 1  # Represents 2^0, 2^1, etc.
+
+        for i in range(length - 1, -1, -1):
+            if binary_string[i] == '1':
+                if current_value + current_power > max_value:
+                    continue
+                current_value += current_power
+                one_count += 1
+            current_power <<= 1
+            if current_power > max_value:
+                break
+
+        return zero_count + one_count
