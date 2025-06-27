@@ -1,0 +1,44 @@
+2014. Longest Subsequence Repeated k Times
+Solution:
+from collections import deque
+
+class Solution:
+    def isKRepeatedSubsequence(self, original_str: str, candidate: str, repeat_count: int) -> bool:
+        pattern_index = 0
+        matched_count = 0
+        pattern_length = len(candidate)
+        
+        for char in original_str:
+            if char == candidate[pattern_index]:
+                pattern_index += 1
+                if pattern_index == pattern_length:
+                    pattern_index = 0
+                    matched_count += 1
+                    if matched_count == repeat_count:
+                        return True
+        return False
+
+    def longestSubsequenceRepeatedK(self, original_str: str, repeat_count: int) -> str:
+        frequency = [0] * 26
+        for char in original_str:
+            frequency[ord(char) - ord('a')] += 1
+        
+        valid_chars = [chr(i + ord('a')) for i in range(25, -1, -1) if frequency[i] >= repeat_count]
+        
+        queue = deque(valid_chars)
+        best_result = ""
+        
+        while queue:
+            current_subseq = queue.popleft()
+            if (len(current_subseq) > len(best_result) or
+                (len(current_subseq) == len(best_result) and current_subseq > best_result)):
+                if self.isKRepeatedSubsequence(original_str, current_subseq, repeat_count):
+                    best_result = current_subseq
+            if len(current_subseq) == 7:
+                continue
+            for char in valid_chars:
+                next_candidate = current_subseq + char
+                if self.isKRepeatedSubsequence(original_str, next_candidate, repeat_count): 
+                    queue.append(next_candidate)
+        
+        return best_result
